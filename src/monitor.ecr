@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script
+      src="https://code.jquery.com/jquery-2.2.4.min.js"
+      integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+      crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      var getUpdate = function() {
+        websocket.send("cpu_speeds");
+        setTimeout(getUpdate, 1000);
+      }
+
+      const websocket = new WebSocket("ws://localhost:3003/update");
+
+      websocket.onopen = function(event) {
+        getUpdate();
+      }
+
+      websocket.onmessage = function(event) {
+        var cpu = JSON.parse(event.data);
+
+        if (cpu) {
+          $("#cpu_" + cpu.id + " .cpu-id").html(cpu.id);
+          $("#cpu_" + cpu.id + " .cpu-name").html(cpu.name);
+          $("#cpu_" + cpu.id + " .cpu-speed").html(cpu.speed);
+        }
+      }
+
+      websocket.onclose = function(event) {
+      }
+    </script>
+    <table>
+      <thead>
+        <tr>
+          <th>Processor ID</th>
+          <th>Model Name</th>
+          <th>Current Speed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% cpus.each do |cpu| %>
+          <% next unless cpu %>
+          <tr id="cpu_<%= cpu.id %>">
+            <td class="cpu-id"><%= cpu.id %></td>
+            <td class="cpu-name"><%= cpu.name %></td>
+            <td class="cpu-speed"><%= cpu.speed %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </ul>
+  </body>
+</html>

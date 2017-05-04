@@ -1,0 +1,20 @@
+name: crystal_monitor
+version: 0.1.0
+
+authors:
+  - adamcreekroad <adamgeorge.31@gmail.com>
+
+targets:
+  crystal_monitor:
+    main: src/crystal_monitor.cr
+
+dependencies:
+  kemal:
+    github: kemalcr/kemal
+    branch: master
+  kilt:
+    github: jeromegn/kilt
+
+crystal: 0.22.0
+
+license: MIT
