@@ -1,4 +1,5 @@
 require "./crystal_monitor/*"
+require "./system_metrics/*"
 require "./views/*"
 require "kemal"
 require "kilt"
@@ -6,7 +7,7 @@ require "kilt"
 SOCKETS = [] of HTTP::WebSocket
 
 get "/" do
-  cpus = cpu_speeds
+  usage = SystemMetrics::CPU.new.current_usage
 
   Kilt.render("./src/monitor.ecr")
 end
@@ -16,10 +17,12 @@ ws "/update" do |socket|
   SOCKETS << socket
   # Broadcast each message to all clients
   socket.on_message do |message|
+    usage = SystemMetrics::CPU.new.current_usage
+
     if message == "cpu_speeds"
       SOCKETS.each do |socket|
-        cpu_speeds.each do |cpu|
-          socket.send cpu.to_json.to_s
+        usage.each do |cpuid, usage|
+          socket.send Tuple.new(cpuid, usage).to_json
         end
       end
     end
@@ -31,24 +34,3 @@ ws "/update" do |socket|
 end
 
 Kemal.run
-
-def cpu_speeds
-  command = "cat /proc/cpuinfo"
-  io = IO::Memory.new
-
-  Process.run(command, shell: true, output: io)
-
-  cpus = io.to_s.split("\n\n")
-
-  parsed_cpus = cpus.map do |i|
-    id    = i.match(/processor\t+: (\d+)\n/)
-    name  = i.match(/model name\t+: (.*)\n/)
-    speed = i.match(/cpu MHz\t+: (\d+\.\d+)\n/)
-
-    if id && name && speed
-      CrystalMonitor::CPU.new(id[1].to_i , name[1].to_s, speed[1].to_f)
-    else
-      nil
-    end
-  end
-end
