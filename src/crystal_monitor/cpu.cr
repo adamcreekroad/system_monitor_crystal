@@ -2,17 +2,37 @@ require "json"
 
 module CrystalMonitor
   class CPU
-    @id : Int32
-    @name : String
-    @speed : Float64
+    @cpuid   : Int32 | Int64
+    @user    : Int32 | Int64
+    @nice    : Int32 | Int64
+    @system  : Int32 | Int64
+    @idle    : Int32 | Int64
+    @iowait  : Int32 | Int64
+    @irq     : Int32 | Int64
 
     JSON.mapping(
-      id: Int32,
-      name: String,
-      speed: Float64
+      cpuid:   Int32 | Int64,
+      user:    Int32 | Int64,
+      nice:    Int32 | Int64,
+      system:  Int32 | Int64,
+      idle:    Int32 | Int64,
+      iowait:  Int32 | Int64,
+      irq:     Int32 | Int64
     )
 
-    def initialize(@id, @name, @speed)
+    def initialize(@cpuid, @user, @nice, @system, @idle, @iowait, @irq)
+    end
+
+    def total_idle
+      @idle + @iowait
+    end
+
+    def total_non_idle
+      @user + @nice + @system + @irq + @softirq + @steal
+    end
+
+    def total
+      total_idle + total_non_idle
     end
   end
 end
