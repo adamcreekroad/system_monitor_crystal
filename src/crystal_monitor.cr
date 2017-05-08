@@ -7,7 +7,10 @@ require "kilt"
 SOCKETS = [] of HTTP::WebSocket
 
 get "/" do
-  usage = SystemMetrics::CPU.new.current_usage
+  cpu_usage = SystemMetrics::CPU.new.current_usage
+  mem_usage = SystemMetrics::Memory.new.current_usage
+
+  puts mem_usage.to_json
 
   Kilt.render("./src/monitor.ecr")
 end
@@ -17,13 +20,14 @@ ws "/update" do |socket|
   SOCKETS << socket
   # Broadcast each message to all clients
   socket.on_message do |message|
-    usage = SystemMetrics::CPU.new.current_usage
+    usage = {
+      cpu: SystemMetrics::CPU.new.current_usage,
+      mem: SystemMetrics::Memory.new.current_usage
+    }
 
     if message == "cpu_speeds"
       SOCKETS.each do |socket|
-        usage.each do |cpuid, usage|
-          socket.send Tuple.new(cpuid, usage).to_json
-        end
+        socket.send usage.to_json
       end
     end
   end

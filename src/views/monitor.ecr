@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script
+      src="https://code.jquery.com/jquery-2.2.4.min.js"
+      integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+      crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      var getUpdate = function() {
+        websocket.send("cpu_speeds");
+        setTimeout(getUpdate, 1000);
+      }
+
+      const websocket = new WebSocket("ws://localhost:3003/update");
+
+      websocket.onopen = function(event) {
+        getUpdate();
+      }
+
+      websocket.onmessage = function(event) {
+        var cpu = JSON.parse(event.data).cpu;
+        var mem = JSON.parse(event.data).mem;
+
+        for (let cpuID in cpu) {
+          $("#cpu_" + cpuID + " .cpu-usage").html(cpu[cpuID] + "%");
+        }
+        if (mem) {
+          $('.mem-total').html(mem.total + 'GB');
+          $('.mem-free').html(mem.free + 'GB');
+          $('.mem-available').html(mem.available + 'GB');
+          $('.mem-buffers').html(mem.buffers + 'GB');
+          $('.mem-cached').html(mem.cached + 'GB');
+        }
+      }
+
+      websocket.onclose = function(event) {
+      }
+    </script>
+    <table>
+      <thead>
+        <tr>
+          <th>Processor ID</th>
+          <th>Usage</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% cpu_usage && cpu_usage.each do |cpu, usage| %>
+          <% next unless cpu %>
+          <tr id="cpu_<%= cpu %>">
+            <td class="cpu-id"><%= cpu %></td>
+            <td class="cpu-usage"><%= usage %>%</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <table>
+      <thead>
+        <tr>
+          <th>Memory</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if mem_usage %>
+          <tr>
+            <td>Total</td>
+            <td class="mem-total"><%= mem_usage.total %>GB</td>
+          </tr>
+          <tr>
+            <td>Free</td>
+            <td class="mem-free"><%= mem_usage.free %>GB</td>
+          </tr>
+          <tr>
+            <td>Available</td>
+            <td class="mem-available"><%= mem_usage.available %>GB</td>
+          </tr>
+          <tr>
+            <td>Buffers</td>
+            <td class="mem-buffers"><%= mem_usage.buffers %>GB</td>
+          </tr>
+          <tr>
+            <td>Cached</td>
+            <td class="mem-cached"><%= mem_usage.cached %>GB</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </body>
+</html>
