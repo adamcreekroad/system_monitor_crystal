@@ -1,0 +1,28 @@
+{
+  "name": "system_monitor_crystal",
+  "version": "1.0.0",
+  "description": "TODO: Write a description here",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adamcreekroad/system_monitor_crystal.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adamcreekroad/system_monitor_crystal/issues"
+  },
+  "homepage": "https://github.com/adamcreekroad/system_monitor_crystal#readme",
+  "dependencies": {
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.4.0",
+    "babel-preset-react": "^6.24.1"
+  }
+}

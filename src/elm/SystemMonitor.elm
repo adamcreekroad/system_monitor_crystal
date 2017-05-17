@@ -1,70 +1,65 @@
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (..)
-import WebSocket
-
 
 main =
   Html.program
-    { init = init
+    { model = model
     , view = view
     , update = update
-    , subscriptions = subscriptions
     }
 
 
 -- MODEL
 
-type alias Model =
-  { input : String
-  , messages : List String
+type alias CPU =
+  { id : Integer
+  , usage : Float
   }
 
+type alias Mem =
+  { total : Float
+  , free : Float
+  , available : Float
+  , buffers : Float
+  , cached : Float
+  }
 
-init : (Model, Cmd Msg)
-init =
-  (Model "" [], Cmd.none)
+model : Model
+model =
+  0
 
 
 -- UPDATE
 
 type Msg
-  = Input String
-  | Send
-  | NewMessage String
+  = Increment
+  | Decrement
 
-
-update : Msg -> Model -> (Model, Cmd Msg)
-update msg {input, messages} =
+update : Msg -> Model -> Model
+update msg model =
   case msg of
-    Input newInput ->
-      (Model newInput messages, Cmd.none)
+    Increment ->
+      model + 1
 
-    Send ->
-      (Model "" messages, WebSocket.send "ws://echo.websocket.org" input)
-
-    NewMessage str ->
-      (Model input (str :: messages), Cmd.none)
-
-
--- SUBSCRIPTIONS
-
-subscriptions : Model -> Sub Msg
-subscriptions model =
-  WebSocket.listen "ws://echo.websocket.org" NewMessage
+    Decrement ->
+      model - 1
 
 
 -- VIEW
 
-view : Model -> Html Msg
+view : Model -> Html msg
 view model =
-  div []
-    [ div [] (List.map viewMessage model.messages)
-    , input [onInput Input] []
-    , button [onClick Send] [text "Send"]
+  table []
+    [ thead []
+        [ tr []
+            [ th [] [ text "Processor ID" ]
+            , th [] [ text "Usage" ]
+            ]
+        ]
+    , tbody []
+        [ tr [ id "cpu_0" ]
+            [ td [ class "cpu-id" ] [ text "0" ]
+            , td [ class "cpu-usage" ] [ text "12%" ]
+            ]
+        ]
     ]
-
-
-viewMessage : String -> Html msg
-viewMessage msg =
-  div [] [ text msg ]

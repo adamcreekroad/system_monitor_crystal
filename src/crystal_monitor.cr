@@ -12,7 +12,25 @@ get "/" do
 
   puts mem_usage.to_json
 
-  Kilt.render("./src/monitor.ecr")
+  Kilt.render("./src/views/monitor.ecr")
+end
+
+get "/react-monitor" do |env|
+  name = env.params.query["name"]
+  
+  Kilt.render("./src/views/react_monitor.ecr")
+end
+
+get "/main" do
+  Kilt.render("./main.ecr")
+end
+
+get "/src/js/system-monitor.js" do
+  File.read("./src/js/system-monitor.js")
+end
+
+get "/src/js/require.js" do
+  File.read("./src/js/require.js")
 end
 
 ws "/update" do |socket|

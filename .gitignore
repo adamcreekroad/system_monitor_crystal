@@ -1,5 +1,6 @@
+/.shards/
+/bin/
 /doc/
 /elm-stuff/
 /lib/
-/bin/
-/.shards/
+/node_modules/
