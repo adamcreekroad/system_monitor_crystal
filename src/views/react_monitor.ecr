@@ -7,22 +7,8 @@
       crossorigin="anonymous"></script>
   </head>
   <body>
-    <div data-react-class="SystemMonitor" data-react-props='{"name": "<%= name %>"}'></div>
-    <script src="https://unpkg.com/react@15/dist/react.min.js"></script>
-    <script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
-    <script src="./src/js/system-monitor.js"></script>
-    <script type="text/javascript">
-      let components = $('[data-react-class]');
-
-      for (let component of components) {
-        componentName = eval($(component).attr('data-react-class'));
-        componentProps = JSON.parse($(component).attr('data-react-props'));
-
-        ReactDOM.render(
-          React.createElement(componentName, componentProps, null),
-          component
-        );
-      }
-    </script>
+    <div data-react-class="SystemMonitor"
+         data-react-props='{"name": "<%= name %>","cpuUsage": <%= cpu_usage %>, "memUsage": <%= mem_usage %>}'></div>
+    <script src="/assets/application.js"></script>
   </body>
 </html>

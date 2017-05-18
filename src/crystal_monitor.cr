@@ -17,7 +17,10 @@ end
 
 get "/react-monitor" do |env|
   name = env.params.query["name"]
-  
+
+  cpu_usage = SystemMetrics::CPU.new.current_usage.to_json
+  mem_usage = SystemMetrics::Memory.new.current_usage.to_json
+
   Kilt.render("./src/views/react_monitor.ecr")
 end
 
@@ -25,12 +28,8 @@ get "/main" do
   Kilt.render("./main.ecr")
 end
 
-get "/src/js/system-monitor.js" do
-  File.read("./src/js/system-monitor.js")
-end
-
-get "/src/js/require.js" do
-  File.read("./src/js/require.js")
+get "/assets/:asset_name" do |env|
+  File.read("./public/assets/#{env.params.url["asset_name"]}")
 end
 
 ws "/update" do |socket|
@@ -39,8 +38,8 @@ ws "/update" do |socket|
   # Broadcast each message to all clients
   socket.on_message do |message|
     usage = {
-      cpu: SystemMetrics::CPU.new.current_usage,
-      mem: SystemMetrics::Memory.new.current_usage
+      cpuUsage: SystemMetrics::CPU.new.current_usage,
+      memUsage: SystemMetrics::Memory.new.current_usage
     }
 
     if message == "cpu_speeds"

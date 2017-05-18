@@ -12,17 +12,27 @@
   },
   "author": "",
   "license": "ISC",
+  "babel": {
+    "presets": [
+      "env",
+      "react"
+    ]
+  },
   "bugs": {
     "url": "https://github.com/adamcreekroad/system_monitor_crystal/issues"
   },
   "homepage": "https://github.com/adamcreekroad/system_monitor_crystal#readme",
   "dependencies": {
+    "prop-types": "^15.5.10",
     "react": "^15.5.4",
     "react-dom": "^15.5.4"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
     "babel-preset-env": "^1.4.0",
-    "babel-preset-react": "^6.24.1"
+    "babel-preset-react": "^6.24.1",
+    "webpack": "^2.5.1"
   }
 }
