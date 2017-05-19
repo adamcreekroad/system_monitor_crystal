@@ -2,6 +2,7 @@ var React = require('react');
 var PropTypes = require('prop-types');
 var CpuUse = require('./cpu-use.js');
 var MemUse = require('./mem-use.js');
+var CpuChart = require('./CpuChart.js');
 
 var initializeWebsocket = function(component) {
   var getUpdate = function() {
@@ -19,7 +20,7 @@ var initializeWebsocket = function(component) {
     var cpuUsage = JSON.parse(event.data).cpuUsage;
     var memUsage = JSON.parse(event.data).memUsage;
 
-    component.updateUsage(cpuUsage, memUsage);
+    component.updateCpuUsage(cpuUsage);
   }
 
   websocket.onclose = function(event) {
@@ -32,12 +33,33 @@ class SystemMonitor extends React.Component {
     initializeWebsocket(this);
 
     this.state = {
-      cpuUsage: props.cpuUsage,
+      cpuUsage: this.initializeCpuUsage(props.cpuUsage),
       memUsage: props.memUsage
     };
   }
 
+  initializeCpuUsage(cpuUsage) {
+    var graphValues = Object.values(cpuUsage);
+    graphValues.unshift(0);
 
+    return [graphValues];
+  }
+
+  updateCpuUsage(cpuUsage) {
+    var currentUsage = this.state.cpuUsage;
+    var graphValues = Object.values(cpuUsage);
+    var lastUpdate = currentUsage[currentUsage.length - 1][0]
+
+    if (lastUpdate < 60) {
+      lastUpdate += 1;
+      graphValues.unshift(lastUpdate);
+      currentUsage.push(graphValues);
+
+      this.updateUsage(currentUsage, this.state.memUsage);
+    } else {
+
+    }
+  }
 
   cpus() {
     var cpuList = []
@@ -79,28 +101,7 @@ class SystemMonitor extends React.Component {
   render() {
     return (
       <div>
-        <table>
-          <thead>
-            <tr>
-              <th>Processor ID</th>
-              <th>Usage</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.cpus()}
-          </tbody>
-        </table>
-        <table>
-          <thead>
-            <tr>
-              <th>Memory</th>
-              <th>Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            {this.mem()}
-          </tbody>
-        </table>
+        <CpuChart cpuUsage={this.state.cpuUsage}/>
       </div>
     )
   }

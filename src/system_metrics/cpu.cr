@@ -40,7 +40,7 @@ module SystemMetrics
       totald = @start_usage[cpu].total.to_f - @finish_usage[cpu].total.to_f
       idled = @start_usage[cpu].total_idle.to_f - @finish_usage[cpu].total_idle.to_f
 
-      ((totald - idled) / totald * 100).abs.round(2)
+      ((totald - idled) / totald * 100).round(2).abs
     end
 
     def current_usage

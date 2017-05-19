@@ -15,7 +15,8 @@
   "babel": {
     "presets": [
       "env",
-      "react"
+      "react",
+      "es2015"
     ]
   },
   "bugs": {
@@ -25,7 +26,8 @@
   "dependencies": {
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
-    "react-dom": "^15.5.4"
+    "react-dom": "^15.5.4",
+    "react-google-charts": "^1.5.5"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

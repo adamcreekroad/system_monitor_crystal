@@ -15,9 +15,7 @@ get "/" do
   Kilt.render("./src/views/monitor.ecr")
 end
 
-get "/react-monitor" do |env|
-  name = env.params.query["name"]
-
+get "/react-monitor" do
   cpu_usage = SystemMetrics::CPU.new.current_usage.to_json
   mem_usage = SystemMetrics::Memory.new.current_usage.to_json
 
