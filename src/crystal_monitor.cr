@@ -7,23 +7,10 @@ require "kilt"
 SOCKETS = [] of HTTP::WebSocket
 
 get "/" do
-  cpu_usage = SystemMetrics::CPU.new.current_usage
-  mem_usage = SystemMetrics::Memory.new.current_usage
-
-  puts mem_usage.to_json
-
-  Kilt.render("./src/views/monitor.ecr")
-end
-
-get "/react-monitor" do
   cpu_usage = SystemMetrics::CPU.new.current_usage.to_json
   mem_usage = SystemMetrics::Memory.new.current_usage.to_json
 
-  Kilt.render("./src/views/react_monitor.ecr")
-end
-
-get "/main" do
-  Kilt.render("./main.ecr")
+  Kilt.render("./src/views/monitor.ecr")
 end
 
 get "/assets/:asset_name" do |env|

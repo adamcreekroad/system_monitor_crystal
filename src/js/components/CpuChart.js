@@ -23,12 +23,12 @@ class CpuChart extends React.Component {
           chartType="LineChart"
           data={this.formatCpuUsage()}
           options={{
-            hAxis: { title: 'Time', minValue: 0, maxValue: 60 },
-            vAxis: { title: 'Usage', minValue: 0.0, maxValue: 100.0 },
+            hAxis: { title: 'Time (Seconds)', minValue: 0, maxValue: 60 },
+            vAxis: { title: 'Usage (Percent)', minValue: 0.0, maxValue: 100.0 },
             legend: { position: 'bottom' },
             title: 'Cpu Use',
           }}
-          graph_id="LineChart"
+          graph_id="CpuChart"
           width="100%"
           height="600px"
           legend_toggle
