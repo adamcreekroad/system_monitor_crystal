@@ -1,8 +1,9 @@
-require "./crystal_monitor/*"
-require "./system_metrics/*"
-require "./views/*"
 require "kemal"
 require "kilt"
+require "crails"
+require "./app/controllers/**"
+require "./app/models/**"
+require "./app/views/**"
 
 SOCKETS = [] of HTTP::WebSocket
 

@@ -7,8 +7,7 @@
       crossorigin="anonymous"></script>
   </head>
   <body>
-    <div data-react-class="SystemMonitor"
-         data-react-props='{"cpuUsage": <%= cpu_usage %>, "memUsage": <%= mem_usage %>}'></div>
+    <%= yield %>
     <script src="/assets/application.js"></script>
   </body>
 </html>
